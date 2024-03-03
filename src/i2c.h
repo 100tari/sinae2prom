@@ -8,7 +8,6 @@ typedef struct
 {
     int     i2c_bus_number;
     int     i2c_device_number;
-    int     i2c_register_number;
 } i2c_number;
 
 enum
