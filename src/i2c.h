@@ -20,8 +20,8 @@ enum
 };
 
 int             sinae2prom_i2c_open_device(i2c_number*);
-int             sinae2prom_i2c_read(i2c_number*, uint8_t*, size_t);
-int             sinae2prom_i2c_read(i2c_number*, uint8_t*, size_t);
+int             sinae2prom_i2c_read(int, int, uint8_t*, size_t);
+int             sinae2prom_i2c_read(int, int, uint8_t*, size_t);
 
 
 #endif // SINAE2PROM_I2C_H
