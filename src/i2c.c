@@ -6,8 +6,9 @@
 #include <linux/i2c-dev.h>
 #include <errno.h>
 #include <stdint.h>
+#include <stdlib.h>
 
-#include "./i2c.h"
+#include "./i2c.h" 
 
 int         
 sinae2prom_i2c_open_device(i2c_number* i2c_dev)
@@ -34,8 +35,12 @@ sinae2prom_i2c_read(int i2c_fd, int r_addr, uint8_t *r_buff, size_t buff_len)
     if(r_buff == NULL)
         return I2C_ERR_NULL;
 
-    int msg = r_addr;
-    if(write(i2c_fd, &msg, sizeof(msg)) < 0)
+    uint8_t mybuf[2];
+
+    mybuf[0] = r_addr >> 8;
+    mybuf[1] = r_addr & 0xFF;
+
+    if(write(i2c_fd, &mybuf, sizeof(mybuf)) != 2)
         return I2C_ERR_WRITE;
     
     if(read(i2c_fd, (void*) r_buff, buff_len) != buff_len)
@@ -50,12 +55,40 @@ sinae2prom_i2c_write(int i2c_fd, int w_addr, uint8_t *w_buff, size_t buff_len)
     if(w_buff == NULL)
         return I2C_ERR_NULL;
 
-    int msg = w_addr;
-    if(write(i2c_fd, &msg, sizeof(msg)) < 0)
+    uint8_t mybuf[buff_len + 2];
+
+    mybuf[0] = w_addr >> 8;
+    mybuf[1] = w_addr & 0xFF;
+    memcpy(&mybuf[2], w_buff, buff_len);
+
+    if(write(i2c_fd, mybuf, buff_len + 2) != (buff_len + 2))
         return I2C_ERR_WRITE;
 
-    if(write(i2c_fd, (void*) w_buff, buff_len) != buff_len)
-        return I2C_ERR_WRITE;
+    return I2c_ERR_NOERR;
+}
 
+int 
+sinae2prom_e2prom_write(int i2c_dev_fd, int w_addr, uint8_t *w_buff, size_t buff_size)
+{
+    uint8_t page[E2PROM_PAGE_SIZE];
+    int current_addr = w_addr;
+    int counter = 0;
+
+    while(counter < buff_size)
+    {
+        memset(page, 0, E2PROM_PAGE_SIZE);
+
+        int len = (buff_size-counter < E2PROM_PAGE_SIZE) ? buff_size-counter : E2PROM_PAGE_SIZE - current_addr%E2PROM_PAGE_SIZE;
+        memcpy(page, &w_buff[counter], len);
+        if(sinae2prom_i2c_write(i2c_dev_fd, current_addr, page, len) < 0)
+            return I2C_ERR_WRITE;
+        
+        printf("Wrote %s in %d\n", page, current_addr);
+
+        counter += len;
+        current_addr += len;
+
+        sleep(1);
+    }
     return I2c_ERR_NOERR;
 }
