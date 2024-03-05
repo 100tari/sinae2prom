@@ -125,7 +125,7 @@ sinae2prom_rpc_handler()
         case 0:
             if((st=sinae2prom_rpc_con_handler(cli_sock)) < 0)
             {
-                printf("[rpc_handler] ERROR:%d - Terminating Connection (%d)...\n", cli_sock);
+                printf("[rpc_handler] ERROR:%d - Terminating Connection (%d)...\n", st, cli_sock);
                 exit(EXIT_SUCCESS);
             }
             break;
