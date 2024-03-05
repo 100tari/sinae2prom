@@ -1,8 +1,8 @@
-#include "./i2c.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "rpc.h"
+#include "i2c.h"
 
 int main(int args, char* argv[])
 {
@@ -22,7 +22,7 @@ int main(int args, char* argv[])
     
     while(1)
     {
-        if(sinae2prom_rpc_handler() < 0)
+        if((st=sinae2prom_rpc_handler()) < 0)
         {
             fprintf(stderr, "Failed To Handle RPC (%d)\n", st);
             close(dev_fd);
