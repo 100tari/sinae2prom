@@ -81,9 +81,9 @@ sinae2prom_rpc_con_handler(const int cli_sock)
             case RPC_REQ_R_HDR:
                 if((st = sinae2prom_e2prom_read(dev_fd, req_addr, read_buf, (size_t) req_r_pld)) != I2c_ERR_NOERR)
                     return RPC_ERR_INTERNAL;
-                printf("[rpc_con_handler] \tRead E2prom Request Done\n");
+                printf("[rpc_con_handler] \tRead E2prom Request Done -> %s\n", read_buf);
 
-                if(send(cli_sock, (void*) read_buf, sizeof(*read_buf), 0) < 0)
+                if(send(cli_sock, (void*) read_buf, req_r_pld, 0) < 0)
                     return RPC_ERR_SEND;
                 printf("[rpc_con_handler] Response Sent To Connection (%d)\n", cli_sock);
 
@@ -110,6 +110,7 @@ sinae2prom_rpc_handler()
     int cli_sock;
     struct sockaddr_in cli_addr;
     int cli_addr_len = sizeof(cli_addr);
+    int st;
 
     printf("[rpc_handler] Listening To Accept Connection...\n");
     if((cli_sock = accept(rpc_sock,(struct sockaddr*) &cli_addr, &cli_addr_len)) < 0)
@@ -122,9 +123,9 @@ sinae2prom_rpc_handler()
             printf("[rpc_handler] Failed To Fork For Connection (%d)\n", cli_sock);
             break;
         case 0:
-            if(sinae2prom_rpc_con_handler(cli_sock) < 0)
+            if((st=sinae2prom_rpc_con_handler(cli_sock)) < 0)
             {
-                printf("[rpc_handler] Terminating Connection (%d)...\n", cli_sock);
+                printf("[rpc_handler] ERROR:%d - Terminating Connection (%d)...\n", cli_sock);
                 exit(EXIT_SUCCESS);
             }
             break;
