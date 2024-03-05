@@ -4,7 +4,9 @@
 #include <stdint.h>
 #include <sys/types.h>
 
-#define E2PROM_PAGE_SIZE        32
+#define E2PROM_PAGE_SIZE            32
+#define E2PROM_MAX_WRITE_BUF_SIZE   1024
+#define E2PROM_MAX_READ_BYTE_SIZE   1024
 
 typedef struct 
 {

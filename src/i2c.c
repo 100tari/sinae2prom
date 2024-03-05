@@ -10,6 +10,8 @@
 
 #include "./i2c.h" 
 
+#define __DEBUG__(...)       do { if(1) {printf(__VA_ARGS__);}} while(0);       
+
 int         
 sinae2prom_i2c_open_device(i2c_number* i2c_dev)
 {
