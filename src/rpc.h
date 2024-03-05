@@ -8,6 +8,8 @@
 
 #define RPC_MAX_REQ_PLD_LEN     E2PROM_MAX_WRITE_BUF_SIZE
 
+#define RPC_REQ_VER_CODE        123
+
 enum 
 {
     RPC_REQ_W_HDR,
@@ -16,12 +18,13 @@ enum
 
 struct RPC_req_s
 {
-    int     r_hdr : 4;
-    int     r_addr;
+    uint8_t     r_ver; 
+    uint16_t    r_hdr;
+    uint32_t    r_addr;
     union
     {
-        char    r_w_pld[E2PROM_MAX_WRITE_BUF_SIZE];
-        int     r_r_pld;
+        uint8_t    r_w_pld[E2PROM_MAX_WRITE_BUF_SIZE];
+        uint8_t    r_r_pld;
     } r_pld ;
 } __attribute__((__packed__));
 
@@ -36,10 +39,12 @@ enum
     RPC_ERR_INTERNAL=   -6,
     RPC_ERR_SETOPT  =   -7,
     RPC_ERR_LISTEN  =   -8,
-    RPC_ERR_ACCEPT  =   -9
+    RPC_ERR_ACCEPT  =   -9,
+    RPC_ERR_VER_REQ =   -10
 };
 
-int                 sinae2prom_rpc_init();
-int                 sinae2prom_rpc_handler(const int);
+int                 sinae2prom_rpc_init(const int);
+int                 sinae2prom_rpc_handler();
+int                 sinae2prom_rpc_pack_req(struct RPC_req_s* ,uint16_t, uint32_t, uint8_t*, uint8_t);
 
 #endif // SINAE2PROM_RPC_H
