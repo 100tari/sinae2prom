@@ -12,18 +12,19 @@ int main(int args, char* argv[])
         .i2c_device_number = 0x50
     };
 
+    int st;
     int dev_fd = sinae2prom_i2c_open_device(&dev);
-    if(sinae2prom_rpc_init() < 0)
+    if((st=sinae2prom_rpc_init(dev_fd)) < 0)
     {
-        fprintf(stderr, "Failed To Init RPC\n");
+        fprintf(stderr, "Failed To Init RPC (%d)\n", st);
         exit(EXIT_FAILURE);
     }
     
     while(1)
     {
-        if(sinae2prom_rpc_handler(dev_fd) < 0)
+        if(sinae2prom_rpc_handler() < 0)
         {
-            fprintf(stderr, "Failed To Handle RPC\n");
+            fprintf(stderr, "Failed To Handle RPC (%d)\n", st);
             close(dev_fd);
             exit(EXIT_FAILURE);
         }
