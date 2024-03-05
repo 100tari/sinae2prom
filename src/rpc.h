@@ -40,7 +40,8 @@ enum
     RPC_ERR_SETOPT  =   -7,
     RPC_ERR_LISTEN  =   -8,
     RPC_ERR_ACCEPT  =   -9,
-    RPC_ERR_VER_REQ =   -10
+    RPC_ERR_VER_REQ =   -10,
+    RPC_ERR_NOT_INIT=   -11
 };
 
 int                 sinae2prom_rpc_init(const int);

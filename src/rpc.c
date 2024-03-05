@@ -13,6 +13,7 @@
 
 static int rpc_sock;
 static int dev_fd;
+static short is_rpc_init;
 
 int 
 sinae2prom_rpc_init(const int device_fd)
@@ -37,6 +38,7 @@ sinae2prom_rpc_init(const int device_fd)
     if(listen(rpc_sock, 100) < 0)
         {close(rpc_sock); return RPC_ERR_LISTEN;}
 
+    is_rpc_init = 1;
     printf("[rpc_init] Rpc Socket Created Successfully\n");
     
     return rpc_sock;
@@ -102,6 +104,9 @@ sinae2prom_rpc_con_handler(const int cli_sock)
 int
 sinae2prom_rpc_handler()
 {
+    if(is_rpc_init != 1)
+        return RPC_ERR_NOT_INIT;
+
     int cli_sock;
     struct sockaddr_in cli_addr;
     int cli_addr_len = sizeof(cli_addr);
