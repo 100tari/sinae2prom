@@ -48,6 +48,8 @@ sinae2prom_i2c_read(int i2c_fd, int r_addr, uint8_t *r_buff, size_t buff_len)
     if(read(i2c_fd, (void*) r_buff, buff_len) != buff_len)
         return I2C_ERR_READ;
 
+    printf("Read %s in %d\n", r_buff, r_addr);
+
     return I2c_ERR_NOERR;
 }
 
