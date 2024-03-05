@@ -10,5 +10,8 @@ all: main cli
 main: $(MAIN_OBJ)
 	$(CC) $(MAIN_OBJ) -o main 
 
+cli: $(CLI_OBJ)
+	$(CC) $(CLI_OBJ) -o cli $(CLI_FLAGS)
+
 clean:
 	rm -rf $(MAIN_OBJ) $(CLI_OBJ)
