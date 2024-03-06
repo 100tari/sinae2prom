@@ -6,7 +6,7 @@ The cli program runs a telnet based cli on the client machine; which you can sen
 
 ### Main Program Notes
 
-**The most important thing is that because main will be used in board, it have to be compiled due to the board's specifications. therefore you must edit Makefile before compilation.**
+**The most important thing is that because main will be used on the board, it have to be compiled due to the board's specifications. therefore you must edit Makefile before compilation.**
 
 Change `dev` struct in the main.c as your bus number and device number.
 
